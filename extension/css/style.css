@@ -111,6 +111,7 @@
   height: 28px;
   padding-left: 1px;
   padding-right: 1px;
+  text-transform: uppercase;
 }
 
 #advanced-stats table.zebra thead tr th.sortable .direction,
@@ -176,6 +177,7 @@
 
 #advanced-stats table.zebra .name .full-name,
 #basic-stats table.zebra .name .full-name {
+  color: #6c6d6f;
   height: auto;
   line-height: 1.3;
   margin: 0;
