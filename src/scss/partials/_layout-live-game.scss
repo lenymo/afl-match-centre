@@ -1,0 +1,21 @@
+//
+//  LAYOUT - LIVE-GAME
+//––––––––––––––––––––––––––––––––––––––––––––––––––
+
+.match-centre#live-game {
+  #live-stats {
+    display: block;
+
+    #basic-stats {
+      display: none;
+    }
+
+    #advanced-stats {
+      display: block;
+    }
+  }
+
+  // #match-report {
+  //   display: none;
+  // }
+}

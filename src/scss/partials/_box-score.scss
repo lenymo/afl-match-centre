@@ -1,0 +1,114 @@
+//
+//  BOX SCORE
+//––––––––––––––––––––––––––––––––––––––––––––––––––
+
+$table-row-bottom-border-color: #f1f2f3;
+$table-border-color: darken($table-row-bottom-border-color, 10%);
+
+#advanced-stats,
+#basic-stats {
+  .module-header {
+    border-bottom: 1px solid $table-border-color;
+  }
+
+  table.zebra {
+    font-family: helvetica, arial, sans-serif;
+
+    tr.stevens {
+      background: #fbfbfb;
+    }
+
+    thead {
+      border-bottom: 0;
+
+      tr {
+        th {
+          background: #fff;
+          border: 0;
+          border-bottom: 1px solid $table-border-color;
+          cursor: pointer;
+          font-size: 10px;
+          height: 28px;
+          padding-left: 1px;
+          padding-right: 1px;
+
+          &.sortable {
+            .direction {
+              background: transparent;
+              // border-radius: 50%;
+              height: 3px;
+              margin-top: -2px;
+              padding: 0;
+              width: 3px;
+              // display: none;
+
+              &.current {
+                background: $color-afl-red;
+              }
+            }
+
+            &:hover {
+              span {
+                color: $color-afl-red;
+              }
+
+              .direction {
+                background: $color-afl-red;
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    tbody {
+      border-bottom: 1px solid $table-border-color;
+
+      tr {
+        td {
+          border: 0;
+          border-bottom: 1px solid $table-row-bottom-border-color;
+          color: #6c6d6f;
+          font-size: 11px;
+          height: auto;
+          padding: 4px 1px;
+          padding-right: 1px;
+        }
+
+        &:last-of-type {
+          td {
+            border-bottom: 0;
+          }
+        }
+
+        &:hover {
+          td {
+            border-bottom: 1px solid darken($table-row-bottom-border-color, 5%);
+            background: darken(#fbfbfb, 2%);
+          }
+        }
+      }
+    }
+      
+    .name {
+      width: 125px;
+
+      span {
+        &:first-child {
+          display: none;
+        }
+      }
+
+      .full-name {
+        height: auto;
+        line-height: 1.3;
+        margin: 0;
+        padding-left: 0;
+      }
+    }
+  }
+}
+
+#basic-stats {
+  margin-top: 20px !important;
+}

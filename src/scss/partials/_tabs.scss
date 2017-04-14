@@ -1,0 +1,22 @@
+//
+//  TABS
+//––––––––––––––––––––––––––––––––––––––––––––––––––
+
+.tabs {
+  text-align: center;
+
+  > .mc-tabs {
+    display: inline-block !important;
+    float: none !important;
+    margin: 0 auto !important;
+    max-width: $container-width;
+    text-align: left;
+    vertical-align: top;
+
+    li {
+      display: inline-block !important;
+      float: none !important;
+      vertical-align: top;
+    }
+  }
+}

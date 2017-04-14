@@ -1,0 +1,21 @@
+//
+//  LAYOUT - POST-GAME
+//––––––––––––––––––––––––––––––––––––––––––––––––––
+
+.match-centre#post-game {
+  #full-time-stats {
+    display: block;
+
+    #basic-stats {
+      display: none;
+    }
+
+    #advanced-stats {
+      display: block;
+    }
+  }
+
+  #match-report {
+    display: none;
+  }
+}

@@ -1,0 +1,68 @@
+//
+//  LAYOUT
+//––––––––––––––––––––––––––––––––––––––––––––––––––
+
+// Hide feedback flyout tab.
+#kampyleButtonContainer {
+  display: none;
+}
+
+.wrapper.page {
+  box-sizing: border-box;
+  width: 100% !important;
+
+  .mc-header,
+  .mc-content,
+  .mc-footer {
+    margin: 0 auto !important;
+    max-width: $container-width;
+  }
+}
+
+#match-preview,
+#team-lineups,
+#live-odds,
+#match-report,
+#basic-stats,
+#advanced-stats {
+  text-align: left;
+}
+
+#match-report,
+#match-preview,
+#team-lineups,
+#live-odds,
+.stats-options .filters {
+  margin: 0 auto !important;
+  max-width: $container-width;
+}
+
+#basic-stats {
+  width: 100% !important;
+
+  .module.halfwidth {
+    box-sizing: border-box;
+    margin: 0 !important;
+    padding-right: 10px;
+    width: 50%;
+  }
+
+  .more-link {
+    top: -45px !important;
+  }
+}
+
+#advanced-stats {
+  width: 100% !important;
+
+  .module.fullwidth {
+    box-sizing: border-box;
+    padding-right: 10px;
+    width: 50%;
+
+    &:last-of-type {
+      padding-left: 10px;
+      padding-right: 0;
+    }
+  }
+}
