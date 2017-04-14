@@ -33,6 +33,11 @@ $table-body-font-color: #6c6d6f;
           padding-left: 1px;
           padding-right: 1px;
           text-transform: uppercase;
+          transition: all .1s ease;
+
+          &.column-hovered {
+            background: darken(#fbfbfb, 2%);
+          }
 
           &.sortable {
             .direction {
@@ -74,7 +79,15 @@ $table-body-font-color: #6c6d6f;
           font-size: 11px;
           height: auto;
           padding: 4px 1px;
-          padding-right: 1px;
+          transition: all .1s ease;
+
+          &.data-changed {
+            animation: fade-out-slowly 10s ease;
+          }
+
+          &.column-hovered {
+            background: darken(#fbfbfb, 2%);
+          }
         }
 
         &:last-of-type {
@@ -87,6 +100,31 @@ $table-body-font-color: #6c6d6f;
           td {
             border-bottom: 1px solid darken($table-row-bottom-border-color, 5%);
             background: darken(#fbfbfb, 2%);
+          }
+        }
+      }
+    }
+
+    tfoot {
+      tr {
+        td {
+          border: 0;
+          border-bottom: 1px solid $table-border-color;
+          color: $table-body-font-color;
+          font-size: 11px;
+          height: auto;
+          padding: 4px 1px;
+          transition: all .1s ease;
+
+          &.column-hovered {
+            background: darken(#fbfbfb, 2%);
+          }
+
+          &.total {
+            font-size: 10px;
+            font-weight: bold;
+            text-align: left;
+            text-transform: uppercase;
           }
         }
       }

@@ -30,7 +30,7 @@ gulp.task('scss', function () {
 gulp.task('js', function() {
   gulp.src('src/js/main.js')
     // .pipe(sourcemaps.init())
-    .pipe(uglify())
+    // .pipe(uglify())
     // .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('extension/js'));
 });

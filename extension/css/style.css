@@ -1,3 +1,18 @@
+@keyframes fade-out-slowly {
+  0% {
+    background-color: transparent;
+  }
+  10% {
+    background-color: #fff5cd;
+  }
+  60% {
+    background-color: #fff5cd;
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
 #kampyleButtonContainer {
   display: none;
 }
@@ -112,6 +127,12 @@
   padding-left: 1px;
   padding-right: 1px;
   text-transform: uppercase;
+  transition: all .1s ease;
+}
+
+#advanced-stats table.zebra thead tr th.column-hovered,
+#basic-stats table.zebra thead tr th.column-hovered {
+  background: #f6f6f6;
 }
 
 #advanced-stats table.zebra thead tr th.sortable .direction,
@@ -151,7 +172,17 @@
   font-size: 11px;
   height: auto;
   padding: 4px 1px;
-  padding-right: 1px;
+  transition: all .1s ease;
+}
+
+#advanced-stats table.zebra tbody tr td.data-changed,
+#basic-stats table.zebra tbody tr td.data-changed {
+  animation: fade-out-slowly 10s ease;
+}
+
+#advanced-stats table.zebra tbody tr td.column-hovered,
+#basic-stats table.zebra tbody tr td.column-hovered {
+  background: #f6f6f6;
 }
 
 #advanced-stats table.zebra tbody tr:last-of-type td,
@@ -163,6 +194,30 @@
 #basic-stats table.zebra tbody tr:hover td {
   border-bottom: 1px solid #e3e5e7;
   background: #f6f6f6;
+}
+
+#advanced-stats table.zebra tfoot tr td,
+#basic-stats table.zebra tfoot tr td {
+  border: 0;
+  border-bottom: 1px solid #d6d9db;
+  color: #6c6d6f;
+  font-size: 11px;
+  height: auto;
+  padding: 4px 1px;
+  transition: all .1s ease;
+}
+
+#advanced-stats table.zebra tfoot tr td.column-hovered,
+#basic-stats table.zebra tfoot tr td.column-hovered {
+  background: #f6f6f6;
+}
+
+#advanced-stats table.zebra tfoot tr td.total,
+#basic-stats table.zebra tfoot tr td.total {
+  font-size: 10px;
+  font-weight: bold;
+  text-align: left;
+  text-transform: uppercase;
 }
 
 #advanced-stats table.zebra .name,

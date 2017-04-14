@@ -1,0 +1,10 @@
+//
+//  ANIMATION
+//––––––––––––––––––––––––––––––––––––––––––––––––––
+
+@keyframes fade-out-slowly {
+  0% { background-color: transparent }
+  10% { background-color: #fff5cd }
+  60% { background-color: #fff5cd }
+  100% { background-color: transparent }
+}
