@@ -413,7 +413,7 @@ chrome.extension.sendMessage({}, function(response) {
 
       // If a match is live.
       if ( $('.match-centre#live-game').length > 0 ) {
-        monitorBoxScore();
+        // monitorBoxScore();
       }
 
 
