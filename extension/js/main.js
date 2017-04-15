@@ -18,7 +18,7 @@ chrome.extension.sendMessage({}, function(response) {
       //   }
       // });
 
-      var boxScoreColumns = [
+      var advancedStatsColumns = [
         {
           className: 'player-name',
           title: 'Player Name',
@@ -233,7 +233,7 @@ chrome.extension.sendMessage({}, function(response) {
       $('#advanced-stats').on('mouseup', 'thead th', function(e) {
         console.log('.sortable was clicked');
         setTimeout(function() {
-          addColumnClasses();
+          // addColumnClasses();
         }, 200);
       });
 
@@ -429,7 +429,7 @@ chrome.extension.sendMessage({}, function(response) {
 
           // Loop through all TDs.
           $(this).find('td').each(function(colIndex, colElem) {
-            $(colElem).addClass( boxScoreColumns[colIndex].className );
+            $(colElem).addClass( advancedStatsColumns[colIndex].className );
           });
         });
 
@@ -438,13 +438,13 @@ chrome.extension.sendMessage({}, function(response) {
 
           // Loop through all THs.
           $(this).find('th').each(function(colIndex, colElem) {
-            $(colElem).addClass( boxScoreColumns[colIndex].className );
-            $(colElem).attr('title', boxScoreColumns[colIndex].title);
+            $(colElem).addClass( advancedStatsColumns[colIndex].className );
+            $(colElem).attr('title', advancedStatsColumns[colIndex].title);
           });
         });
       }
 
-      addColumnClasses();
+      // addColumnClasses();
 
 
 
@@ -462,7 +462,7 @@ chrome.extension.sendMessage({}, function(response) {
         var colTitle;
 
         // Loop through the box score columns object
-        for ( var i = 0; i < boxScoreColumns.length; i++ ) {
+        for ( var i = 0; i < advancedStatsColumns.length; i++ ) {
 
           // If this is the first column (name).
           if ( i === 0 ) {
@@ -471,15 +471,15 @@ chrome.extension.sendMessage({}, function(response) {
 
           // If this is the second column (number).
           } else if ( i === 1 ) {
-            colClassName = boxScoreColumns[i].className;
+            colClassName = advancedStatsColumns[i].className;
             colTitle = '';
 
           // If this is any other columns.
           } else {
-            colClassName = boxScoreColumns[i].className;
-            colTitle = boxScoreColumns[i].title;
+            colClassName = advancedStatsColumns[i].className;
+            colTitle = advancedStatsColumns[i].title;
           }
-          // console.log( boxScoreColumns[i].colClassName );
+          // console.log( advancedStatsColumns[i].colClassName );
           tableFooterHTML += '<td class="' + colClassName + '" title="' + colTitle + '">';
 
           if ( i === 0 ) {
@@ -514,15 +514,15 @@ chrome.extension.sendMessage({}, function(response) {
         var statTotal;
         var playerName;
 
-        var boxScoreColumnsCount = Object.keys( boxScoreColumns ).length;
+        var advancedStatsColumnsCount = Object.keys( advancedStatsColumns ).length;
 
-        // console.log( boxScoreColumnsCount );
+        // console.log( advancedStatsColumnsCount );
 
         // Loop through each column.
-        for ( var i = 0; i < boxScoreColumnsCount; i++ ) {
+        for ( var i = 0; i < advancedStatsColumnsCount; i++ ) {
 
           statTotal = 0;
-          countThisStat = boxScoreColumns[i].count;
+          countThisStat = advancedStatsColumns[i].count;
 
           // If this isn't the first or second column.
           if ( countThisStat ) {
@@ -534,10 +534,10 @@ chrome.extension.sendMessage({}, function(response) {
               thisStat = Number( $(this).find('td:nth-child(' + (i + 1) + ')' ).text() );
 
               statTotal = statTotal + thisStat;
-              // console.log( boxScoreColumns[i].title + ' :' + statTotal );
+              // console.log( advancedStatsColumns[i].title + ' :' + statTotal );
             });
 
-            $(boxScoreTable + ' tfoot td.' + boxScoreColumns[i].className ).text(statTotal);
+            $(boxScoreTable + ' tfoot td.' + advancedStatsColumns[i].className ).text(statTotal);
           }
         }
       }
