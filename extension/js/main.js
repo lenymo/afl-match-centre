@@ -8,15 +8,92 @@ chrome.extension.sendMessage({}, function(response) {
 
       clearInterval(readyStateCheckInterval);
 
-      // $('.mc-tabs li').each(function(i, e) {
-      //   console.log('text: ' + $(this).find('a').text());
-      //   if ( $(this).find('a').text() == 'Full-time stats' ) {
-      //     $('.mc-tabs li').removeClass('ui-tabs-selected');
-      //     $('.mc-tabs li').removeClass('ui-state-active');
-      //     $(this).addClass('ui-tabs-selected');
-      //     $(this).addClass('ui-state-active');
-      //   }
-      // });
+      var basicStatsColumns = [
+        {
+          className: 'player-name',
+          title: 'Player Name',
+          titleShort: 'player',
+          count: false,
+          value: null
+        },
+        {
+          className: 'kicks',
+          title: 'Kicks',
+          titleShort: 'K',
+          count: true,
+          value: null
+        },
+        {
+          className: 'handballs',
+          title: 'Handballs',
+          titleShort: 'H',
+          count: true,
+          value: null
+        },
+        {
+          className: 'disposals',
+          title: 'Disposals',
+          titleShort: 'D',
+          count: true,
+          value: null
+        },
+        {
+          className: 'marks',
+          title: 'Marks',
+          titleShort: 'M',
+          count: true,
+          value: null
+        },
+        {
+          className: 'hitouts',
+          title: 'Hitouts',
+          titleShort: 'HO',
+          count: true,
+          value: null
+        },
+        {
+          className: 'frees-for',
+          title: 'Frees For',
+          titleShort: 'FF',
+          count: true,
+          value: null
+        },
+        {
+          className: 'frees-against',
+          title: 'Frees Against',
+          titleShort: 'FA',
+          count: true,
+          value: null
+        },
+        {
+          className: 'tackles',
+          title: 'Tackles',
+          titleShort: 'T',
+          count: true,
+          value: null
+        },
+        {
+          className: 'goals',
+          title: 'Goals',
+          titleShort: 'G',
+          count: true,
+          value: null
+        },
+        {
+          className: 'behinds',
+          title: 'Behinds',
+          titleShort: 'B',
+          count: true,
+          value: null
+        },
+        {
+          className: 'fantasy-points',
+          title: 'AFL Fantasy Points',
+          titleShort: 'AF',
+          count: true,
+          value: null
+        },
+      ];
 
       var advancedStatsColumns = [
         {
@@ -265,6 +342,28 @@ chrome.extension.sendMessage({}, function(response) {
         }
       });
 
+      $('#basic-stats').on('mouseenter', 'table td, table th', function(e) {
+        var nthChild = $(this).index();
+        var columnHoverClass = 'column-hovered';
+
+        // If this isn't the name column.
+        if ( ! $(this).hasClass('name') && ! $(this).hasClass('player') ) {
+          $('#basic-stats table td:nth-child(' + (nthChild + 1) + ')').addClass(columnHoverClass);
+          $('#basic-stats table th:nth-child(' + (nthChild + 1) + ')').addClass(columnHoverClass);
+        }
+      }); 
+
+      $('#basic-stats').on('mouseleave', 'table td, table th', function(e) {
+        var nthChild = $(this).index();
+        var columnHoverClass = 'column-hovered';
+
+        // If this isn't the name column.
+        if ( ! $(this).hasClass('name') && ! $(this).hasClass('player') ) {
+          $('#basic-stats table td:nth-child(' + (nthChild + 1) + ')').removeClass(columnHoverClass);
+          $('#basic-stats table th:nth-child(' + (nthChild + 1) + ')').removeClass(columnHoverClass);
+        }
+      });
+
 
 
       //
@@ -273,7 +372,7 @@ chrome.extension.sendMessage({}, function(response) {
 
       function monitorBoxScore() {
 
-        var boxScoreTable = '.match-centre#live-game #advanced-stats .module table';
+        var boxScoreTable = '.match-centre#live-game #basic-stats .module table';
 
         var target = document.querySelector( boxScoreTable );
 
@@ -283,7 +382,7 @@ chrome.extension.sendMessage({}, function(response) {
 
           var oldNodeClass = null;
           var oldText = null;
-          var oldData = {};
+          var oldData = [];
 
           // Loop through the mutations.
           mutations.forEach(function( mutation ) {
@@ -303,45 +402,50 @@ chrome.extension.sendMessage({}, function(response) {
 
               // If there are old nodes.
               if ( mutation.removedNodes.length > 0 ) {
-                // console.log( 'mutation.removedNodes', mutation.removedNodes );
+                console.log( 'mutation.removedNodes', mutation.removedNodes );
                 var $removedNodes = $(mutation.removedNodes);
 
+                console.log( '$removedNodes.length: ' + $removedNodes.length );
+
                 oldData = null;
-                oldData = {};
+                oldData = [];
 
                 // Loop through removed nodes.
                 $removedNodes.each(function(i, e) {
 
-                  // If the removed node is a td.
-                  if ( $(this).is('td') ) {
-                    // If the text is not just white space.
-                    if ( $(this).text().trim() !== '' ) {
+                  // If the removed node is a tr.
+                  if ( $(this).is('tr') ) {
 
-                      // Find out what type of element this is.
-                      oldNodeClass = $(this).attr('class');
+                    // Grab the removed TDs.
+                    var $removedTDs = $(this).find('td');
 
-                      // If this is the name td.
-                      if ( oldNodeClass == 'name' ) {
+                    // If this TR has TD children (i.e. it's not a header).
+                    if ( $removedTDs.length > 0 ) {
 
-                        // Find the name (because it's not raw text in the td).
-                        oldData[oldNodeClass] = getName( $(this) );
+                      // Loop through the removed TDs.
+                      $removedTDs.each(function(removedIndex, removedElem) {
 
-                      // If this is NOT the name td.
-                      } else {
+                        // Grab the individual TD.
+                        var $removedTD = $(this);
 
-                        // Grab the data straight from the td.
-                        oldText = $(this).text();
+                        // If the text is not just white space.
+                        if ( $removedTD.text().trim() !== '' ) {
 
-                        // Add this stat to the oldData object.
-                        oldData[oldNodeClass] = oldText;
-                      }
-                      // oldData[oldText] = oldText;
-                      // console.log( 'old class: ', $(this).attr('class') );
-                      // console.log( 'old text: ', $(this).text() );
-                    } // if ( $(this).text().trim() !== '' )
-                  }
+                          // Grab the data straight from the td.
+                          oldText = $(this).text();
+
+                          // Add this stat to the oldData object.
+                          oldData.push(oldText);
+                          // oldData[oldText] = oldText;
+                          // console.log( 'old class: ', $(this).attr('class') );
+                          // console.log( 'old text: ', $(this).text() );
+                        } // if ( $removedTDs.text().trim() !== '' )
+                      }); // $removedTDs.each(function()
+                    } // if ( $removedTDs.length > 0 )
+
+                  } // if ( $(this).is('tr') )
                 }); // $removedNodes.each(function(i, e)
-                // console.log( 'oldData: ', oldData );
+                console.log( 'oldData: ', oldData );
               } // if ( mutation.removedNodes.length > 0 )
 
 
@@ -352,46 +456,54 @@ chrome.extension.sendMessage({}, function(response) {
                 var $node = $( this );
 
                 console.log( '–––––––––––––––––––––––' );
-                console.log('new node: ', $node);
+                console.log( 'new node: ', $node );
 
                 // If the changed element is a TD.
-                if ( $node.is('td') ) {
+                if ( $node.is('tr') ) {
 
                   // This class describes the stat type (i.e. pts, rebs, etc).
                   // It is pulled from each the <td> in the table.
                   var nodeClass = $node.attr('class');
 
+                  var $nodeTDs = $node.find('td');
 
-                  // Get the new data.
-                  var newText = $node.text();
-                  // console.log( 'nodeClass' );
+                  console.log( 'Name: ', $nodeTDs.find('.full-name').text() );
+                  
+                  $nodeTDs.each(function(tdIndex, tdElem) {
 
-                  // If this isn't a player's name or a custom stat.
-                  // We don't want to worry about names changing.
-                  if ( !$node.hasClass('name') ) {
+                    
+                    // Instantiate individual TD.
+                    var $nodeTD = $(this);
 
-                    // If the new value is different to the previous value.
-                    if ( newText !== oldData[nodeClass] ) {
-                      console.log( '–––––––––––––––––––––––' );
-                      console.log( 'SOMETHING CHANGED!!' );
-                      console.log( '–––––––––––––––––––––––' );
-                      console.log( 'Name: ', oldData.name );
-                      console.log( 'nodeClass: ', nodeClass );
-                      console.log( 'newText: ', newText );
-                      console.log(  'oldData[nodeClass]: ', oldData[nodeClass] );
-                      console.log( '–––––––––––––––––––––––' );
+                    var newText = $nodeTD.text();
 
-                      // Add a class to indicate that the data has changed.
-                      $node.addClass('data-changed');
+                    // If this isn't a player's name or a custom stat.
+                    // We don't want to worry about names changing.
+                    if ( !$nodeTD.hasClass('name') ) {
 
-                      // After X seconds.
-                      setTimeout(function() {
+                      // If the new value is different to the previous value.
+                      if ( newText !== oldData[tdIndex] ) {
+                        // console.log( '–––––––––––––––––––––––' );
+                        // console.log( 'SOMETHING CHANGED!!' );
+                        // console.log( '–––––––––––––––––––––––' );
+                        // console.log( 'Player Name: ', oldData[0] );
+                        // console.log( 'Stat: ', basicStatsColumns[tdIndex].title );
+                        // console.log( 'oldText: ', oldData[tdIndex] );
+                        // console.log( 'newText: ', newText );
+                        // console.log( '–––––––––––––––––––––––' );
 
-                        // Remove the class.
-                        $node.removeClass('data-changed');
-                      }, 10000);
-                    }
-                  } // if ( nodeClass !== 'name' )
+                        // Add a class to indicate that the data has changed.
+                        $nodeTD.addClass('data-changed');
+
+                        // After X seconds.
+                        setTimeout(function() {
+
+                          // Remove the class.
+                          $nodeTD.removeClass('data-changed');
+                        }, 10000);
+                      }
+                    } // if ( nodeClass !== 'name' )
+                  })
 
                 } // if ( $node.is('td') )
               }); // $nodes.each(function( i, e )
@@ -413,7 +525,7 @@ chrome.extension.sendMessage({}, function(response) {
 
       // If a match is live.
       if ( $('.match-centre#live-game').length > 0 ) {
-        // monitorBoxScore();
+        monitorBoxScore();
       }
 
 
@@ -421,6 +533,8 @@ chrome.extension.sendMessage({}, function(response) {
       //
       //  ADD COLUMN CLASSES
       //––––––––––––––––––––––––––––––––––––––––––––––––––
+
+      // Add classes to each TD and TH within the stat table (i.e. marks-inside-50).
 
       function addColumnClasses() {
 
@@ -449,10 +563,65 @@ chrome.extension.sendMessage({}, function(response) {
 
 
       //
-      //  ADD TOTALS ROW (AND COLUMNS)
+      //  ADD BASIC STAT TOTALS ROW
       //––––––––––––––––––––––––––––––––––––––––––––––––––
 
-      function addTotalsRow() {
+      // Appends a table footer to the bottom of the advanced stats table.
+
+      function addBasicStatTotalsRow() {
+
+        // Declare an empty variable with table footer HTML.
+        var tableFooterHTML;
+        tableFooterHTML = '<tfoot><tr class="totals">';
+
+        var colClassName;
+        var colTitle;
+
+        // Loop through the box score columns object
+        for ( var i = 0; i < basicStatsColumns.length; i++ ) {
+
+          // If this is the first column (name).
+          if ( i === 0 ) {
+            colClassName = 'total';
+            colTitle = 'Totals';
+
+          // If this is the second column (number).
+          } else if ( i === 1 ) {
+            colClassName = basicStatsColumns[i].className;
+            colTitle = '';
+
+          // If this is any other columns.
+          } else {
+            colClassName = basicStatsColumns[i].className;
+            colTitle = basicStatsColumns[i].title;
+          }
+          // console.log( basicStatsColumns[i].colClassName );
+          tableFooterHTML += '<td class="' + colClassName + '" title="' + colTitle + '">';
+
+          if ( i === 0 ) {
+            tableFooterHTML += 'Team totals';
+          }
+
+          tableFooterHTML += '</td>';
+        }
+
+        tableFooterHTML += '</tr></tfoot>';
+        
+
+        $( tableFooterHTML ).insertAfter( $('#homeTeam-basic tbody, #awayTeam-basic tbody') );
+      }
+
+      addBasicStatTotalsRow();
+
+
+
+      //
+      //  ADD ADVANCED STAT TOTALS ROW
+      //––––––––––––––––––––––––––––––––––––––––––––––––––
+
+      // Appends a table footer to the bottom of the advanced stats table.
+
+      function addAdvancedStatTotalsRow() {
 
         // Declare an empty variable with table footer HTML.
         var tableFooterHTML;
@@ -495,16 +664,64 @@ chrome.extension.sendMessage({}, function(response) {
         $( tableFooterHTML ).insertAfter( $('#homeTeam-advanced tbody, #awayTeam-advanced tbody') );
       }
 
-      addTotalsRow();
+      addAdvancedStatTotalsRow();
+
 
 
 
 
       //
-      //  CALCULATE PLAYER STAT TOTALS
+      //  CALCULATE BASIC STAT TOTALS
       //––––––––––––––––––––––––––––––––––––––––––––––––––
 
-      function calculatePlayerStatTotals( homeOrAway ) {
+      function calculateBasicStatTotals( homeOrAway ) {
+
+        var boxScoreTable = '#basic-stats #' + homeOrAway + 'Team-basic';
+        var boxScoreTableRow = boxScoreTable + ' tbody tr';
+
+        var thisStat;
+        var countThisStat;
+        var statTotal;
+        var playerName;
+
+        var basicStatsColumnsCount = Object.keys( basicStatsColumns ).length;
+
+        // console.log( basicStatsColumnsCount );
+
+        // Loop through each column.
+        for ( var i = 0; i < basicStatsColumnsCount; i++ ) {
+
+          statTotal = 0;
+          countThisStat = basicStatsColumns[i].count;
+
+          // If this isn't the first or second column.
+          if ( countThisStat ) {
+            // Loop through each row of the table.
+            $( boxScoreTableRow ).each(function(rowIndex, rowElement) {
+              playerName = getName( $(this).find('name') );
+              // console.log( playerName );
+
+              thisStat = Number( $(this).find('td:nth-child(' + (i + 1) + ')' ).text() );
+
+              statTotal = statTotal + thisStat;
+              // console.log( basicStatsColumns[i].title + ' :' + statTotal );
+            });
+
+            $(boxScoreTable + ' tfoot td.' + basicStatsColumns[i].className ).text(statTotal);
+          }
+        }
+      }
+
+      calculateBasicStatTotals( 'home' );
+      calculateBasicStatTotals( 'away' );
+
+
+
+      //
+      //  CALCULATE ADVANCED STAT TOTALS
+      //––––––––––––––––––––––––––––––––––––––––––––––––––
+
+      function calculateAdvancedStatTotals( homeOrAway ) {
 
         var boxScoreTable = '#advanced-stats #' + homeOrAway + 'Team-advanced';
         var boxScoreTableRow = boxScoreTable + ' tbody tr';
@@ -542,8 +759,8 @@ chrome.extension.sendMessage({}, function(response) {
         }
       }
 
-      calculatePlayerStatTotals( 'home' );
-      calculatePlayerStatTotals( 'away' );
+      calculateAdvancedStatTotals( 'home' );
+      calculateAdvancedStatTotals( 'away' );
 
 
 
