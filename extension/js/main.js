@@ -493,17 +493,17 @@ chrome.extension.sendMessage({}, function(response) {
                         // console.log( '–––––––––––––––––––––––' );
 
                         // Add a class to indicate that the data has changed.
-                        $nodeTD.addClass('data-changed');
+                        // $nodeTD.addClass('data-changed');
 
                         // After X seconds.
-                        setTimeout(function() {
+                        // setTimeout(function() {
 
                           // Remove the class.
-                          $nodeTD.removeClass('data-changed');
-                        }, 10000);
+                          // $nodeTD.removeClass('data-changed');
+                        // }, 10000);
                       }
                     } // if ( nodeClass !== 'name' )
-                  })
+                  });
 
                 } // if ( $node.is('td') )
               }); // $nodes.each(function( i, e )
