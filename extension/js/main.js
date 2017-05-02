@@ -149,7 +149,7 @@ chrome.extension.sendMessage({}, function(response) {
           className: 'disposal-efficiency',
           title: 'Disposal Efficency %',
           titleShort: 'DE%',
-          count: false,
+          count: true,
           value: null
         },
         {
@@ -638,7 +638,7 @@ chrome.extension.sendMessage({}, function(response) {
         var colClassName;
         var colTitle;
 
-        // Loop through the box score columns object
+        // Loop through the box score columns object.
         for ( var i = 0; i < advancedStatsColumns.length; i++ ) {
 
           // If this is the first column (name).
@@ -764,7 +764,16 @@ chrome.extension.sendMessage({}, function(response) {
               // console.log( advancedStatsColumns[i].title + ' :' + statTotal );
             });
 
+            // Disposal efficiency.
+            if ( advancedStatsColumns[i].className == 'disposal-efficiency' ) {
+              statTotal = (statTotal / 22).toFixed(1);
+            }
+
             $(boxScoreTable + ' tfoot td.' + advancedStatsColumns[i].className ).text(statTotal);
+
+          // Everything else.
+          } else {
+            $(boxScoreTable + ' tfoot td.' + advancedStatsColumns[i].className ).text( '-'' );
           }
         }
       }
