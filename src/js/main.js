@@ -773,7 +773,7 @@ chrome.extension.sendMessage({}, function(response) {
 
           // Everything else.
           } else {
-            $(boxScoreTable + ' tfoot td.' + advancedStatsColumns[i].className ).text( '-'' );
+            $(boxScoreTable + ' tfoot td.' + advancedStatsColumns[i].className ).text( '-' );
           }
         }
       }
