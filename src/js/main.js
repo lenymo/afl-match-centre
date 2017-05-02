@@ -377,8 +377,8 @@ chrome.extension.sendMessage({}, function(response) {
         var target = document.querySelector( boxScoreTable );
 
         var observer = new MutationObserver(function( mutations ) {
-          console.log('–––––––––––––––––––––––');
-          console.log('New mutation observed.');
+          // console.log('–––––––––––––––––––––––');
+          // console.log('New mutation observed.');
 
           var oldNodeClass = null;
           var oldText = null;
@@ -387,9 +387,9 @@ chrome.extension.sendMessage({}, function(response) {
           // Loop through the mutations.
           mutations.forEach(function( mutation ) {
 
-            console.log('–––––––––––––––––––––––');
-            console.log('mutation type: ' + mutation.type);
-            console.log('mutation.removedNodes', mutation.removedNodes);
+            // console.log('–––––––––––––––––––––––');
+            // console.log('mutation type: ' + mutation.type);
+            // console.log('mutation.removedNodes', mutation.removedNodes);
 
             // DOM NodeList.
             var newNodes = mutation.addedNodes;
@@ -402,10 +402,10 @@ chrome.extension.sendMessage({}, function(response) {
 
               // If there are old nodes.
               if ( mutation.removedNodes.length > 0 ) {
-                console.log( 'mutation.removedNodes', mutation.removedNodes );
+                // console.log( 'mutation.removedNodes', mutation.removedNodes );
                 var $removedNodes = $(mutation.removedNodes);
 
-                console.log( '$removedNodes.length: ' + $removedNodes.length );
+                // console.log( '$removedNodes.length: ' + $removedNodes.length );
 
                 oldData = null;
                 oldData = [];
@@ -431,8 +431,14 @@ chrome.extension.sendMessage({}, function(response) {
                         // If the text is not just white space.
                         if ( $removedTD.text().trim() !== '' ) {
 
-                          // Grab the data straight from the td.
-                          oldText = $(this).text();
+                          // If this is the name column.
+                          if ( $(this).hasClass('name') ) {
+                            oldText = getName( $(this) );
+                          } else {
+                            // Grab the data straight from the td.
+                            oldText = $(this).text();
+                          }
+
 
                           // Add this stat to the oldData object.
                           oldData.push(oldText);
@@ -455,8 +461,8 @@ chrome.extension.sendMessage({}, function(response) {
                 // jQuery set.
                 var $node = $( this );
 
-                console.log( '–––––––––––––––––––––––' );
-                console.log( 'new node: ', $node );
+                // console.log( '–––––––––––––––––––––––' );
+                // console.log( 'new node: ', $node );
 
                 // If the changed element is a TD.
                 if ( $node.is('tr') ) {
@@ -467,10 +473,12 @@ chrome.extension.sendMessage({}, function(response) {
 
                   var $nodeTDs = $node.find('td');
 
-                  console.log( 'Name: ', $nodeTDs.find('.full-name').text() );
+                  calculateBasicStatTotals('home');
+                  calculateBasicStatTotals('away');
+
+                  // console.log( 'Name: ', $nodeTDs.find('.full-name').text() );
                   
                   $nodeTDs.each(function(tdIndex, tdElem) {
-
                     
                     // Instantiate individual TD.
                     var $nodeTD = $(this);
@@ -675,6 +683,8 @@ chrome.extension.sendMessage({}, function(response) {
       //––––––––––––––––––––––––––––––––––––––––––––––––––
 
       function calculateBasicStatTotals( homeOrAway ) {
+
+        console.log('calculateBasicStatTotals();');
 
         var boxScoreTable = '#basic-stats #' + homeOrAway + 'Team-basic';
         var boxScoreTableRow = boxScoreTable + ' tbody tr';
