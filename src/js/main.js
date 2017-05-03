@@ -854,7 +854,7 @@ chrome.extension.sendMessage({}, function(response) {
 
       function calculateBasicStatTotals( homeOrAway ) {
 
-        console.log('calculateBasicStatTotals();');
+        // console.log('calculateBasicStatTotals();');
 
         var boxScoreTable = '#basic-stats #' + homeOrAway + 'Team-basic';
         var boxScoreTableRow = boxScoreTable + ' tbody tr';
