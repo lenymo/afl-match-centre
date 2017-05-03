@@ -12,5 +12,5 @@
 // });
 
 chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
-  chrome.tabs.executeScript(null,{file: "src/inject/inject.css"});
+  chrome.tabs.executeScript(null,{file: "css/style.css"});
 });
