@@ -11,10 +11,6 @@
     "128": "icons/icon128.png"
   },
   "default_locale": "en",
-  "background": {
-    "page": "bg/background.html",
-    "persistent": true
-  },
   "permissions": [
     "http://www.afl.com.au/match-centre/*"
   ],
