@@ -367,7 +367,7 @@ chrome.extension.sendMessage({}, function(response) {
 
 
       //
-      //  MONITOR BOX SCORE
+      //  MONITOR BASIC BOX SCORE
       //––––––––––––––––––––––––––––––––––––––––––––––––––
 
       function monitorBoxScore() {
@@ -531,10 +531,180 @@ chrome.extension.sendMessage({}, function(response) {
         observer.observe(target, config);
       } // monitorBoxScore()
 
+
+
+      //
+      //  MONITOR BASIC BOX SCORE
+      //––––––––––––––––––––––––––––––––––––––––––––––––––
+
+      function monitorAdvancedBoxScore() {
+
+        var boxScoreTable = '.match-centre#live-game #advanced-stats .module table';
+
+        var target = document.querySelector( boxScoreTable );
+
+        var observer = new MutationObserver(function( mutations ) {
+          // console.log('–––––––––––––––––––––––');
+          // console.log('New mutation observed.');
+
+          var oldNodeClass = null;
+          var oldText = null;
+          var oldData = [];
+
+          // Loop through the mutations.
+          mutations.forEach(function( mutation ) {
+
+            // console.log('–––––––––––––––––––––––');
+            // console.log('mutation type: ' + mutation.type);
+            // console.log('mutation.removedNodes', mutation.removedNodes);
+
+            // DOM NodeList.
+            var newNodes = mutation.addedNodes;
+
+            // If there are new nodes added.
+            if ( newNodes !== null ) {
+
+              // jQuery set.
+              var $nodes = $( newNodes );
+
+              // If there are old nodes.
+              if ( mutation.removedNodes.length > 0 ) {
+                // console.log( 'mutation.removedNodes', mutation.removedNodes );
+                var $removedNodes = $(mutation.removedNodes);
+
+                // console.log( '$removedNodes.length: ' + $removedNodes.length );
+
+                oldData = null;
+                oldData = [];
+
+                // Loop through removed nodes.
+                $removedNodes.each(function(i, e) {
+
+                  // If the removed node is a tr.
+                  if ( $(this).is('tr') ) {
+
+                    // Grab the removed TDs.
+                    var $removedTDs = $(this).find('td');
+
+                    // If this TR has TD children (i.e. it's not a header).
+                    if ( $removedTDs.length > 0 ) {
+
+                      // Loop through the removed TDs.
+                      $removedTDs.each(function(removedIndex, removedElem) {
+
+                        // Grab the individual TD.
+                        var $removedTD = $(this);
+
+                        // If the text is not just white space.
+                        if ( $removedTD.text().trim() !== '' ) {
+
+                          // If this is the name column.
+                          if ( $(this).hasClass('name') ) {
+                            oldText = getName( $(this) );
+                          } else {
+                            // Grab the data straight from the td.
+                            oldText = $(this).text();
+                          }
+
+
+                          // Add this stat to the oldData object.
+                          oldData.push(oldText);
+                          // oldData[oldText] = oldText;
+                          // console.log( 'old class: ', $(this).attr('class') );
+                          // console.log( 'old text: ', $(this).text() );
+                        } // if ( $removedTDs.text().trim() !== '' )
+                      }); // $removedTDs.each(function()
+                    } // if ( $removedTDs.length > 0 )
+
+                  } // if ( $(this).is('tr') )
+                }); // $removedNodes.each(function(i, e)
+                console.log( 'oldData: ', oldData );
+              } // if ( mutation.removedNodes.length > 0 )
+
+
+              // Loop through all new nodes.
+              $nodes.each(function( i, e ) {
+
+                // jQuery set.
+                var $node = $( this );
+
+                // console.log( '–––––––––––––––––––––––' );
+                // console.log( 'new node: ', $node );
+
+                // If the changed element is a TD.
+                if ( $node.is('tr') ) {
+
+                  // This class describes the stat type (i.e. pts, rebs, etc).
+                  // It is pulled from each the <td> in the table.
+                  var nodeClass = $node.attr('class');
+
+                  var $nodeTDs = $node.find('td');
+
+                  calculateAdvancedStatTotals('home');
+                  calculateAdvancedStatTotals('away');
+
+                  // console.log( 'Name: ', $nodeTDs.find('.full-name').text() );
+                  
+                  $nodeTDs.each(function(tdIndex, tdElem) {
+                    
+                    // Instantiate individual TD.
+                    var $nodeTD = $(this);
+
+                    var newText = $nodeTD.text();
+
+                    // If this isn't a player's name or a custom stat.
+                    // We don't want to worry about names changing.
+                    if ( !$nodeTD.hasClass('name') ) {
+
+                      // If the new value is different to the previous value.
+                      if ( newText !== oldData[tdIndex] ) {
+                        // console.log( '–––––––––––––––––––––––' );
+                        // console.log( 'SOMETHING CHANGED!!' );
+                        // console.log( '–––––––––––––––––––––––' );
+                        // console.log( 'Player Name: ', oldData[0] );
+                        // console.log( 'Stat: ', basicStatsColumns[tdIndex].title );
+                        // console.log( 'oldText: ', oldData[tdIndex] );
+                        // console.log( 'newText: ', newText );
+                        // console.log( '–––––––––––––––––––––––' );
+
+                        // Add a class to indicate that the data has changed.
+                        // $nodeTD.addClass('data-changed');
+
+                        // After X seconds.
+                        // setTimeout(function() {
+
+                          // Remove the class.
+                          // $nodeTD.removeClass('data-changed');
+                        // }, 10000);
+                      }
+                    } // if ( nodeClass !== 'name' )
+                  });
+
+                } // if ( $node.is('td') )
+              }); // $nodes.each(function( i, e )
+            } // if ( newNodes !== null )
+          }); // mutations.forEach(function( mutation )
+        }); // End of mutation 
+
+        // Configuration of the observer:
+        var config = { 
+          childList: true,
+          subtree: true,
+          characterData: true,
+          characterDataOldValue: true
+        };
+         
+        // Pass in the target node, as well as the observer options
+        observer.observe(target, config);
+      } // monitorAdvancedBoxScore()
+
+
       // If a match is live.
       if ( $('.match-centre#live-game').length > 0 ) {
         monitorBoxScore();
+        monitorAdvancedBoxScore();
       }
+
 
 
 
